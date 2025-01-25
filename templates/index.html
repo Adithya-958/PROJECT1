@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -38,5 +38,143 @@
     <input type="file" id="file" name="file" accept=".pdf" required><br><br>
     <button type="submit">Convert</button>
   </form>
+</body>
+</html> -->
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF/Image Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    form {
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      width: 300px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>PDF/Image Converter</h1>
+  <form id="convertForm" action="/convert" method="post" enctype="multipart/form-data">
+    <label for="file">Upload File:</label><br>
+    <input type="file" id="file" name="file" accept=".pdf, .jpg, .jpeg, .png" required><br><br>
+    
+    <label for="conversionType">Choose Conversion Type:</label><br>
+    <select id="conversionType" name="conversionType" required>
+      <option value="pdf_to_image">PDF to Image</option>
+      <option value="image_to_pdf">Image to PDF</option>
+    </select><br><br>
+    
+    <button type="submit">Convert</button>
+  </form>
+  <script>
+    const conversionType = document.getElementById("conversionType");
+    const fileInput = document.getElementById("file");
+  
+    // Update the file input's accept attribute based on the selected conversion type
+    conversionType.addEventListener("change", () => {
+      if (conversionType.value === "pdf_to_image") {
+        fileInput.accept = ".pdf"; // Allow only PDFs for PDF to Image
+      } else if (conversionType.value === "image_to_pdf") {
+        fileInput.accept = ".jpg, .jpeg, .png"; // Allow only images for Image to PDF
+      }
+    });
+  
+    // Set initial accept value
+    conversionType.dispatchEvent(new Event("change"));
+  </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Tools</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    form {
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      width: 300px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .section {
+      margin-top: 30px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>PDF Tools</h1>
+
+  <!-- Existing PDF Conversion Box -->
+  <div class="section">
+    <h2>PDF/Image Converter</h2>
+    <form id="convertForm" action="/convert" method="post" enctype="multipart/form-data">
+      <label for="file">Upload File:</label><br>
+      <input type="file" id="file" name="file" accept=".pdf, .jpg, .jpeg, .png" required><br><br>
+
+      <label for="conversionType">Choose Conversion Type:</label><br>
+      <select id="conversionType" name="conversionType" required>
+        <option value="pdf_to_image">PDF to Image</option>
+        <option value="image_to_pdf">Image to PDF</option>
+      </select><br><br>
+
+      <button type="submit">Convert</button>
+    </form>
+  </div>
+
+  <!-- New Merge PDF Section -->
+  <div class="section">
+    <h2>Merge PDFs</h2>
+    <form id="mergeForm" action="/merge" method="post" enctype="multipart/form-data">
+      <label for="file1">Upload First PDF:</label><br>
+      <input type="file" id="file1" name="file1" accept=".pdf" required><br><br>
+
+      <label for="file2">Upload Second PDF:</label><br>
+      <input type="file" id="file2" name="file2" accept=".pdf" required><br><br>
+
+      <button type="submit">Merge</button>
+    </form>
+  </div>
 </body>
 </html>
