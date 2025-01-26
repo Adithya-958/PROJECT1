@@ -141,6 +141,31 @@
     button:hover {
       background-color: #45a049;
     }
+
+    /* Hide the sections by default for Split PDF Section*/
+    .option-group {
+      display: none;
+    }
+
+    /* Styling for the buttons */
+    .buttons-container button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .buttons-container button:hover {
+      background-color: #45a049;
+    }
+
+    h2 {
+      font-family: Arial, sans-serif;
+    }
   </style>
 </head>
 <body>
@@ -176,5 +201,78 @@
       <button type="submit">Merge</button>
     </form>
   </div>
+
+  <div class="split-pdf-section">
+    <h2>Split PDF</h2>
+
+    <!-- Operation Buttons -->
+    <div class="buttons-container">
+      <button onclick="showSection('range-options')">Range</button>
+      <button onclick="showSection('page-options')">Extract Pages</button>
+      <button onclick="showSection('size-options')">Size</button>
+    </div>
+
+    <!-- Range Options -->
+    <div id="range-options" class="option-group">
+      <h3>Range Options</h3>
+      <label>
+        <input type="radio" name="range-type" value="fixed" checked> Fixed Range
+      </label>
+      <label>
+        <input type="radio" name="range-type" value="custom"> Custom Range
+      </label>
+      <div id="fixed-range">
+        <label for="fixed-range-input">Split into page ranges of:</label>
+        <input type="number" id="fixed-range-input" name="fixed-range-input" min="1" placeholder="Enter fixed range">
+      </div>
+      <div id="custom-range">
+        <label for="custom-range-input">Enter custom ranges:</label>
+        <textarea id="custom-range-input" name="custom-range-input" placeholder="e.g., 1-5, 6-20, 21-53"></textarea>
+      </div>
+    </div>
+
+    <!-- Extract Pages Options -->
+    <div id="page-options" class="option-group">
+      <h3>Extract Pages Options</h3>
+      <label>
+        <input type="radio" name="page-type" value="fixed" checked> Fixed Extraction (One page per PDF)
+      </label>
+      <label>
+        <input type="radio" name="page-type" value="custom"> Selected Pages Extraction
+      </label>
+      <div id="Fixed">
+        <label for="custom-page-input">Enter pages to be extracted into PDFs:</label>
+        <textarea id="custom-page-input" name="custom-page-input" placeholder="e.g., 13"></textarea>
+        <h4>the total number of pages is 15 and selected is 13, thus 13 PDF files will be generated from the starting.</h4>
+      </div>
+      <div id="custom-pages">
+        <label for="custom-page-input">Enter pages to extract:</label>
+        <textarea id="custom-page-input" name="custom-page-input" placeholder="e.g., 1-5, 7-53"></textarea>
+      </div>
+    </div>
+
+  <!-- Size Options -->
+  <div id="size-options" class="option-group" style="display: none;">
+    <h3>Size Options</h3>
+    <label for="size-input">Split into PDFs of size (in KB):</label>
+    <input type="number" id="size-input" name="size-input" min="1" placeholder="Enter size in KB">
+    <p style="font-size: 14px; color: gray;">e.g., 1024 for 1MB, 512 for 0.5MB, etc.</p>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Function to show the selected section
+    function showSection(sectionId) {
+      // Hide all sections initially
+      const sections = document.querySelectorAll('.option-group');
+      sections.forEach(section => section.style.display = 'none');
+
+      // Show the selected section
+      const selectedSection = document.getElementById(sectionId);
+      if (selectedSection) {
+        selectedSection.style.display = 'block';
+      }
+    }
+  </script>
 </body>
 </html>
