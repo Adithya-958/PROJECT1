@@ -46,7 +46,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDF/Image Converter</title>
+  <title>PDF/JPG Converter</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -75,15 +75,15 @@
   </style>
 </head>
 <body>
-  <h1>PDF/Image Converter</h1>
+  <h1>PDF/JPG Converter</h1>
   <form id="convertForm" action="/convert" method="post" enctype="multipart/form-data">
     <label for="file">Upload File:</label><br>
     <input type="file" id="file" name="file" accept=".pdf, .jpg, .jpeg, .png" required><br><br>
     
     <label for="conversionType">Choose Conversion Type:</label><br>
     <select id="conversionType" name="conversionType" required>
-      <option value="pdf_to_image">PDF to Image</option>
-      <option value="image_to_pdf">Image to PDF</option>
+      <option value="pdf_to_JPG">PDF to JPG</option>
+      <option value="JPG_to_pdf">JPG to PDF</option>
     </select><br><br>
     
     <button type="submit">Convert</button>
@@ -94,10 +94,10 @@
   
     // Update the file input's accept attribute based on the selected conversion type
     conversionType.addEventListener("change", () => {
-      if (conversionType.value === "pdf_to_image") {
-        fileInput.accept = ".pdf"; // Allow only PDFs for PDF to Image
-      } else if (conversionType.value === "image_to_pdf") {
-        fileInput.accept = ".jpg, .jpeg, .png"; // Allow only images for Image to PDF
+      if (conversionType.value === "pdf_to_JPG") {
+        fileInput.accept = ".pdf"; // Allow only PDFs for PDF to JPG
+      } else if (conversionType.value === "JPG_to_pdf") {
+        fileInput.accept = ".jpg, .jpeg, .png"; // Allow only JPGs for JPG to PDF
       }
     });
   
@@ -141,27 +141,60 @@
     button:hover {
       background-color: #45a049;
     }
+
+    /* Hide the sections by default for Split PDF Section*/
+    .option-group {
+      display: none;
+    }
+
+    /* Styling for the buttons */
+    .buttons-container button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .buttons-container button:hover {
+      background-color: #45a049;
+    }
+
+    h2 {
+      font-family: Arial, sans-serif;
+    }
   </style>
 </head>
 <body>
   <h1>PDF Tools</h1>
 
-  <!-- Existing PDF Conversion Box -->
-  <div class="section">
-    <h2>PDF/Image Converter</h2>
-    <form id="convertForm" action="/convert" method="post" enctype="multipart/form-data">
-      <label for="file">Upload File:</label><br>
-      <input type="file" id="file" name="file" accept=".pdf, .jpg, .jpeg, .png" required><br><br>
+<!-- PDF / JPG Converter -->
+<div class="section">
+  <h2>PDF / JPG Converter</h2>
+  
+  <label for="pdfJPGToggle">Select Conversion Type:</label>
+  <select id="pdfJPGToggle" onchange="togglePdfJPG()">
+    <option value="pdfToJPG">PDF to JPG</option>
+    <option value="JPGToPdf">JPG to PDF</option>
+  </select>
 
-      <label for="conversionType">Choose Conversion Type:</label><br>
-      <select id="conversionType" name="conversionType" required>
-        <option value="pdf_to_image">PDF to Image</option>
-        <option value="image_to_pdf">Image to PDF</option>
-      </select><br><br>
+  <!-- PDF to JPG Form -->
+  <form id="pdfToJPGForm" action="/pdf_to_JPG" method="post" enctype="multipart/form-data">
+    <label for="pdfFile">Upload PDF File:</label><br>
+    <input type="file" id="pdfFile" name="file" accept=".pdf" required><br><br>
+    <button type="submit">Convert to JPG</button>
+  </form>
 
-      <button type="submit">Convert</button>
-    </form>
-  </div>
+  <!-- JPG to PDF Form (Hidden by Default) -->
+  <form id="JPGToPdfForm" action="/JPG_to_pdf" method="post" enctype="multipart/form-data" style="display: none;">
+    <label for="JPGFile">Upload JPG File:</label><br>
+    <input type="file" id="JPGFile" name="file" accept=".jpg, .jpeg, .png" required><br><br>
+    <button type="submit">Convert to PDF</button>
+  </form>
+</div>
 
   <!-- New Merge PDF Section -->
   <div class="section">
@@ -176,5 +209,145 @@
       <button type="submit">Merge</button>
     </form>
   </div>
+
+  <div class="split-pdf-section">
+    <h2>Split PDF</h2>
+
+    <!-- Operation Buttons -->
+    <div class="buttons-container">
+      <button onclick="showSection('range-options')">Range</button>
+      <button onclick="showSection('page-options')">Extract Pages</button>
+      <button onclick="showSection('size-options')">Size</button>
+    </div>
+
+    <!-- Range Options -->
+    <div id="range-options" class="option-group">
+      <h3>Range Options</h3>
+      <label>
+        <input type="radio" name="range-type" value="fixed" checked> Fixed Range
+      </label>
+      <label>
+        <input type="radio" name="range-type" value="custom"> Custom Range
+      </label>
+      <div id="fixed-range">
+        <label for="fixed-range-input">Split into page ranges of:</label>
+        <input type="number" id="fixed-range-input" name="fixed-range-input" min="1" placeholder="Enter fixed range">
+      </div>
+      <div id="custom-range">
+        <label for="custom-range-input">Enter custom ranges:</label>
+        <textarea id="custom-range-input" name="custom-range-input" placeholder="e.g., 1-5, 6-20, 21-53"></textarea>
+      </div>
+    </div>
+
+    <!-- Extract Pages Options -->
+    <div id="page-options" class="option-group">
+      <h3>Extract Pages Options</h3>
+      <label>
+        <input type="radio" name="page-type" value="fixed" checked> Fixed Extraction (One page per PDF)
+      </label>
+      <label>
+        <input type="radio" name="page-type" value="custom"> Selected Pages Extraction
+      </label>
+      <div id="Fixed">
+        <label for="custom-page-input">Enter pages to be extracted into PDFs:</label>
+        <textarea id="custom-page-input" name="custom-page-input" placeholder="e.g., 13"></textarea>
+        <h4>the total number of pages is 15 and selected is 13, thus 13 PDF files will be generated from the starting.</h4>
+      </div>
+      <div id="custom-pages">
+        <label for="custom-page-input">Enter pages to extract:</label>
+        <textarea id="custom-page-input" name="custom-page-input" placeholder="e.g., 1-5, 7-53"></textarea>
+      </div>
+    </div>
+
+  <!-- Size Options -->
+  <div id="size-options" class="option-group" style="display: none;">
+    <h3>Size Options</h3>
+    <label for="size-input">Split into PDFs of size (in KB):</label>
+    <input type="number" id="size-input" name="size-input" min="1" placeholder="Enter size in KB">
+    <p style="font-size: 14px; color: gray;">e.g., 1024 for 1MB, 512 for 0.5MB, etc.</p>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Function to show the selected section
+    function showSection(sectionId) {
+      // Hide all sections initially
+      const sections = document.querySelectorAll('.option-group');
+      sections.forEach(section => section.style.display = 'none');
+
+      // Show the selected section
+      const selectedSection = document.getElementById(sectionId);
+      if (selectedSection) {
+        selectedSection.style.display = 'block';
+      }
+    }
+  </script>
+<!-- Excel to PDF & PDF to Excel Converter -->
+<div class="section">
+  <h2>Excel / PDF Converter</h2>
+  <label for="excelPdfToggle">Select Conversion Type:</label>
+  <select id="excelPdfToggle" onchange="toggleExcelPdf()">
+    <option value="excelToPdf">Excel to PDF</option>
+    <option value="pdfToExcel">PDF to Excel</option>
+  </select>
+
+  <!-- Excel to PDF Form -->
+  <form id="excelToPdfForm" action="/excel_to_pdf" method="post" enctype="multipart/form-data">
+    <label for="excelFile">Upload Excel File:</label><br>
+    <input type="file" id="excelFile" name="file" accept=".xlsx, .xls" required><br><br>
+    <button type="submit">Convert to PDF</button>
+  </form>
+
+  <!-- PDF to Excel Form (Hidden by Default) -->
+  <form id="pdfToExcelForm" action="/pdf_to_excel" method="post" enctype="multipart/form-data" style="display: none;">
+    <label for="pdfToExcelFile">Upload PDF:</label><br>
+    <input type="file" id="pdfToExcelFile" name="file" accept=".pdf" required><br><br>
+    <button type="submit">Convert to Excel</button>
+  </form>
+</div>
+
+<!-- PowerPoint to PDF & PDF to PowerPoint Converter -->
+<div class="section">
+  <h2>PowerPoint / PDF Converter</h2>
+  <label for="pptPdfToggle">Select Conversion Type:</label>
+  <select id="pptPdfToggle" onchange="togglePptPdf()">
+    <option value="pptToPdf">PowerPoint to PDF</option>
+    <option value="pdfToPpt">PDF to PowerPoint</option>
+  </select>
+
+  <!-- PowerPoint to PDF Form -->
+  <form id="pptToPdfForm" action="/ppt_to_pdf" method="post" enctype="multipart/form-data">
+    <label for="pptFile">Upload PowerPoint File:</label><br>
+    <input type="file" id="pptFile" name="file" accept=".pptx, .ppt" required><br><br>
+    <button type="submit">Convert to PDF</button>
+  </form>
+
+  <!-- PDF to PowerPoint Form (Hidden by Default) -->
+  <form id="pdfToPptForm" action="/pdf_to_ppt" method="post" enctype="multipart/form-data" style="display: none;">
+    <label for="pdfToPptFile">Upload PDF:</label><br>
+    <input type="file" id="pdfToPptFile" name="file" accept=".pdf" required><br><br>
+    <button type="submit">Convert to PowerPoint</button>
+  </form>
+</div>
+
+<script>
+  function toggleExcelPdf() {
+    let selection = document.getElementById("excelPdfToggle").value;
+    document.getElementById("excelToPdfForm").style.display = (selection === "excelToPdf") ? "block" : "none";
+    document.getElementById("pdfToExcelForm").style.display = (selection === "pdfToExcel") ? "block" : "none";
+  }
+
+  function togglePptPdf() {
+    let selection = document.getElementById("pptPdfToggle").value;
+    document.getElementById("pptToPdfForm").style.display = (selection === "pptToPdf") ? "block" : "none";
+    document.getElementById("pdfToPptForm").style.display = (selection === "pdfToPpt") ? "block" : "none";
+  }
+  function togglePdfJPG() {
+    let selection = document.getElementById("pdfJPGToggle").value;
+    document.getElementById("pdfToJPGForm").style.display = (selection === "pdfToJPG") ? "block" : "none";
+    document.getElementById("JPGToPdfForm").style.display = (selection === "JPGToPdf") ? "block" : "none";
+  }
+</script>
+
 </body>
 </html>
