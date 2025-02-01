@@ -46,6 +46,7 @@ import os
 import zipfile
 from PyPDF2 import PdfReader, PdfWriter
 
+
 app = Flask(__name__)
 
 # Temporary folder for storing uploaded and processed files
@@ -58,6 +59,7 @@ def index():
 
 @app.route("/convert", methods=["POST"])
 @app.route("/merge", methods=["POST"])
+@app.route('/split_pdf', methods=['POST'])
 def convert_file():
     uploaded_file = request.files["file"]
     conversion_type = request.form["conversionType"]
@@ -143,7 +145,7 @@ def merge_pdfs():
 
     except Exception as e:
         return f"Error during merging: {e}", 500
-@app.route('/split_pdf', methods=['POST'])
+
 def split_pdf():
     try:
         # Upload the PDF file
@@ -302,5 +304,7 @@ def split_pdf_by_size(input_pdf_path, size_in_kb):
 
     return output_files
 
+
 if __name__ == "__main__":
     app.run(debug=True)
+    #code pending for Excel and PowerPoint --> PDF
